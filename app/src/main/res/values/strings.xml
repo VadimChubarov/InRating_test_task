@@ -1,0 +1,13 @@
+<resources>
+    <string name="app_name">Test_task_InRating</string>
+    <string name="title">inrating.top</string>
+    <string name="screen_title">Статистика поста</string>
+    <string name="views_title">Просмотры</string>
+    <string name="likes_title">Лайки</string>
+    <string name="comments_title">Комментаторы</string>
+    <string name="mantiones_title">Отметки</string>
+    <string name="reposts_title">Репосты</string>
+    <string name="bookmarks_title">Закладки</string>
+    <string name="more_title">еще</string>
+    <string name="test_number">25</string>
+</resources>
