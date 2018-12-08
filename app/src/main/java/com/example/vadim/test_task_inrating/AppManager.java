@@ -1,6 +1,7 @@
 package com.example.vadim.test_task_inrating;
 
 import android.view.View;
+import android.widget.Toast;
 import com.example.vadim.test_task_inrating.Activities.MainActivity;
 import com.example.vadim.test_task_inrating.AppItems.PostData;
 import com.example.vadim.test_task_inrating.AppItems.PostUsers;
@@ -54,6 +55,7 @@ public class AppManager implements AppInterface.Presenter
 
                   mainActivity.showLoadingProgress(false);
                   mainActivity.showUsersLoadingProgress(true);
+                  coreLogic.setRequestInProgress(false);
 
                   int postId = coreLogic.getPostInfo().getId();
                   initilizePostUsers(AppFilter.LIKE,postId,0);
@@ -61,10 +63,24 @@ public class AppManager implements AppInterface.Presenter
                   initilizePostUsers(AppFilter.COMMENT,postId,500);
                   initilizePostUsers(AppFilter.MANTION,postId,750);
                 }
-                else{System.out.println("response code " + response.code()); coreLogic.setError("POST",String.valueOf(response.code()));}
+                else
+                    {
+                        System.out.println("response code " + response.code()); coreLogic.setError("POST",String.valueOf(response.code()));
+                        Toast toast = Toast.makeText(mainActivity, "connection problem :"+response.code(), Toast.LENGTH_SHORT);
+                        toast.show();
+                        mainActivity.showLoadingProgress(false);
+                        coreLogic.setRequestInProgress(false);
+                    }
             }
             @Override
-            public void onFailure(Call<PostInfo> call, Throwable t){System.out.println("failure " + t);coreLogic.setError("POST",t.toString());}
+            public void onFailure(Call<PostInfo> call, Throwable t)
+            {
+                System.out.println("failure " + t);coreLogic.setError("POST",t.toString());
+                Toast toast = Toast.makeText(mainActivity, "connection problem :"+t, Toast.LENGTH_SHORT);
+                toast.show();
+                mainActivity.showLoadingProgress(false);
+                coreLogic.setRequestInProgress(false);
+            }
         };
 
         coreLogic.requestPostInfo(slug,instuction);
@@ -97,17 +113,36 @@ public class AppManager implements AppInterface.Presenter
                                          if(coreLogic.RequestPostUsersReady()){postUsers = coreLogic.collectPostUsers();presentPostUsersData();}break;
                     }
                 }
-                else{System.out.println("response code " + response.code());coreLogic.setError(filter,String.valueOf(response.code()));}
+                else
+                    {
+                        System.out.println("response code " + response.code());
+                        coreLogic.setError(filter,String.valueOf(response.code()));
+                        Toast toast = Toast.makeText(mainActivity, "connection problem :"+response.code(), Toast.LENGTH_SHORT);
+                        toast.show();
+                        mainActivity.showUsersLoadingProgress(false);
+                        coreLogic.setRequestInProgress(false);
+                    }
             }
 
             @Override
             public void onFailure(Call<Users> call, Throwable t)
-            {System.out.println("failure " + t);coreLogic.setError(filter,t.toString());}
+            {
+                System.out.println("failure " + t);coreLogic.setError(filter,t.toString());
+                Toast toast = Toast.makeText(mainActivity, "connection problem :"+t, Toast.LENGTH_SHORT);
+                toast.show();
+                mainActivity.showUsersLoadingProgress(false);
+                coreLogic.setRequestInProgress(false);
+            }
         };
         coreLogic.requestUsers(filter,instruction,postId,delay);
     }
 
-    public void presentPostUsersData() {mainActivity.showPostUsersData(postUsers);mainActivity.showUsersLoadingProgress(false);}
+    public void presentPostUsersData()
+    {
+        mainActivity.showPostUsersData(postUsers);
+        mainActivity.showUsersLoadingProgress(false);
+        coreLogic.setRequestInProgress(false);
+    }
 
     public void refreshAllPostData()
     {
@@ -121,7 +156,7 @@ public class AppManager implements AppInterface.Presenter
         {
             switch (v.getId())
             {
-                case R.id.toolbar_refresh : if (coreLogic.RequestPostInfoReady() && coreLogic.RequestPostUsersReady())
+                case R.id.toolbar_refresh : if (!coreLogic.isRequestInProgress())
                                             {AppManager.this.refreshAllPostData();}break;
 
                 case R.id.button_home : mainActivity.finish();break;
