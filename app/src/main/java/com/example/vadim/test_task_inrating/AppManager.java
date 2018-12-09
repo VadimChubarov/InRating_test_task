@@ -1,7 +1,6 @@
 package com.example.vadim.test_task_inrating;
 
 import android.view.View;
-import android.widget.Toast;
 import com.example.vadim.test_task_inrating.Activities.MainActivity;
 import com.example.vadim.test_task_inrating.AppItems.PostData;
 import com.example.vadim.test_task_inrating.AppItems.PostUsers;
@@ -65,9 +64,8 @@ public class AppManager implements AppInterface.Presenter
                 }
                 else
                     {
-                        System.out.println("response code " + response.code()); coreLogic.setError("POST",String.valueOf(response.code()));
-                        Toast toast = Toast.makeText(mainActivity, "connection problem :"+response.code(), Toast.LENGTH_SHORT);
-                        toast.show();
+                        coreLogic.setError(AppFilter.POST,String.valueOf(response.code()));
+                        mainActivity.showErrorMessage(coreLogic.getError(AppFilter.POST));
                         mainActivity.showLoadingProgress(false);
                         coreLogic.setRequestInProgress(false);
                     }
@@ -75,9 +73,8 @@ public class AppManager implements AppInterface.Presenter
             @Override
             public void onFailure(Call<PostInfo> call, Throwable t)
             {
-                System.out.println("failure " + t);coreLogic.setError("POST",t.toString());
-                Toast toast = Toast.makeText(mainActivity, "connection problem :"+t, Toast.LENGTH_SHORT);
-                toast.show();
+                coreLogic.setError(AppFilter.POST,t.toString());
+                mainActivity.showErrorMessage(coreLogic.getError(AppFilter.POST));
                 mainActivity.showLoadingProgress(false);
                 coreLogic.setRequestInProgress(false);
             }
@@ -115,10 +112,8 @@ public class AppManager implements AppInterface.Presenter
                 }
                 else
                     {
-                        System.out.println("response code " + response.code());
                         coreLogic.setError(filter,String.valueOf(response.code()));
-                        Toast toast = Toast.makeText(mainActivity, "connection problem :"+response.code(), Toast.LENGTH_SHORT);
-                        toast.show();
+                        mainActivity.showErrorMessage(coreLogic.getError(filter));
                         mainActivity.showUsersLoadingProgress(false);
                         coreLogic.setRequestInProgress(false);
                     }
@@ -127,9 +122,8 @@ public class AppManager implements AppInterface.Presenter
             @Override
             public void onFailure(Call<Users> call, Throwable t)
             {
-                System.out.println("failure " + t);coreLogic.setError(filter,t.toString());
-                Toast toast = Toast.makeText(mainActivity, "connection problem :"+t, Toast.LENGTH_SHORT);
-                toast.show();
+                coreLogic.setError(filter,t.toString());
+                mainActivity.showErrorMessage(coreLogic.getError(filter));
                 mainActivity.showUsersLoadingProgress(false);
                 coreLogic.setRequestInProgress(false);
             }

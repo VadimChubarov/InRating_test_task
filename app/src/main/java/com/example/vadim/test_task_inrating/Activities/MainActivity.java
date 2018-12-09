@@ -7,6 +7,7 @@ import android.view.View;
 import android.widget.Button;
 import android.widget.ProgressBar;
 import android.widget.RelativeLayout;
+import android.widget.Toast;
 import com.example.vadim.test_task_inrating.AppInterface;
 import com.example.vadim.test_task_inrating.AppItems.PostData;
 import com.example.vadim.test_task_inrating.AppItems.PostUsers;
@@ -91,6 +92,12 @@ public class MainActivity extends AppCompatActivity implements AppInterface.View
         userRepostsFragment.showLoadingProgress(show);
         userCommentedFragment.showLoadingProgress(show);
         userMantionedFragment.showLoadingProgress(show);
+    }
+
+    public void showErrorMessage(String error)
+    {
+        Toast toast = Toast.makeText(this, "connection problem :"+error, Toast.LENGTH_SHORT);
+        toast.show();
     }
 
     public void initilizeAllViews()
